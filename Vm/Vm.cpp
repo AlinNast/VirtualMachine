@@ -13,8 +13,9 @@ int main()
 	printf("Read64 at 0x100: %llx\n", (unsigned long long)memory.Read64(0x100)); // 123456789abcdef
 	printf("Read8  at 0x100: %x\n", memory.Read8(0x100)); // ef
 	printf("Read8  at 0x107: %x\n", memory.Read8(0x107)); // 1
-	printf("Read8  at 0x107: %x\n", (unsigned long long)memory.Read64(0x108)); // 1
+	printf("Read64 at 0x108: %llx\n", (unsigned long long)memory.Read64(0x108)); // 1
 
+	memory.ShowCount();
 
 
     return 0;
