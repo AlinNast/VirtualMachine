@@ -1,0 +1,391 @@
+; chase.txt - pointer chase over 1 MiB
+
+.data
+0x100000 1
+0x100008 1163264
+0x104000 2
+0x104008 1179648
+0x108000 3
+0x108008 1196032
+0x10c000 4
+0x10c008 1212416
+0x110000 5
+0x110008 1228800
+0x114000 6
+0x114008 1245184
+0x118000 7
+0x118008 1261568
+0x11c000 8
+0x11c008 1277952
+0x120000 9
+0x120008 1294336
+0x124000 10
+0x124008 1310720
+0x128000 11
+0x128008 1327104
+0x12c000 12
+0x12c008 1343488
+0x130000 13
+0x130008 1359872
+0x134000 14
+0x134008 1376256
+0x138000 15
+0x138008 1392640
+0x13c000 16
+0x13c008 1409024
+0x140000 17
+0x140008 1425408
+0x144000 18
+0x144008 1441792
+0x148000 19
+0x148008 1458176
+0x14c000 20
+0x14c008 1474560
+0x150000 21
+0x150008 1490944
+0x154000 22
+0x154008 1507328
+0x158000 23
+0x158008 1523712
+0x15c000 24
+0x15c008 1540096
+0x160000 25
+0x160008 1556480
+0x164000 26
+0x164008 1572864
+0x168000 27
+0x168008 1589248
+0x16c000 28
+0x16c008 1605632
+0x170000 29
+0x170008 1622016
+0x174000 30
+0x174008 1638400
+0x178000 31
+0x178008 1654784
+0x17c000 32
+0x17c008 1671168
+0x180000 33
+0x180008 1687552
+0x184000 34
+0x184008 1703936
+0x188000 35
+0x188008 1720320
+0x18c000 36
+0x18c008 1736704
+0x190000 37
+0x190008 1753088
+0x194000 38
+0x194008 1769472
+0x198000 39
+0x198008 1785856
+0x19c000 40
+0x19c008 1802240
+0x1a0000 41
+0x1a0008 1818624
+0x1a4000 42
+0x1a4008 1835008
+0x1a8000 43
+0x1a8008 1851392
+0x1ac000 44
+0x1ac008 1867776
+0x1b0000 45
+0x1b0008 1884160
+0x1b4000 46
+0x1b4008 1900544
+0x1b8000 47
+0x1b8008 1916928
+0x1bc000 48
+0x1bc008 1933312
+0x1c0000 49
+0x1c0008 1949696
+0x1c4000 50
+0x1c4008 1966080
+0x1c8000 51
+0x1c8008 1982464
+0x1cc000 52
+0x1cc008 1998848
+0x1d0000 53
+0x1d0008 2015232
+0x1d4000 54
+0x1d4008 2031616
+0x1d8000 55
+0x1d8008 2048000
+0x1dc000 56
+0x1dc008 2064384
+0x1e0000 57
+0x1e0008 2080768
+0x1e4000 58
+0x1e4008 1048576
+0x1e8000 59
+0x1e8008 1064960
+0x1ec000 60
+0x1ec008 1081344
+0x1f0000 61
+0x1f0008 1097728
+0x1f4000 62
+0x1f4008 1114112
+0x1f8000 63
+0x1f8008 1130496
+0x1fc000 64
+0x1fc008 1146880
+
+.code
+mov r0, 0
+mov r1, 0x100000
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]
+add r0, [r1]
+mov r2, r1
+add r2, 8
+mov r1, [r2]

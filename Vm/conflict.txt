@@ -1,0 +1,33 @@
+; conflict.txt - nine lines fighting for the same L1 set
+
+.data
+0x100000 1
+0x101000 2
+0x102000 3
+0x103000 4
+0x104000 5
+0x105000 6
+0x106000 7
+0x107000 8
+0x108000 9
+
+.code
+mov r0, 0
+add r0, [0x100000]
+add r0, [0x101000]
+add r0, [0x102000]
+add r0, [0x103000]
+add r0, [0x104000]
+add r0, [0x105000]
+add r0, [0x106000]
+add r0, [0x107000]
+add r0, [0x108000]
+add r0, [0x100000]
+add r0, [0x101000]
+add r0, [0x102000]
+add r0, [0x103000]
+add r0, [0x104000]
+add r0, [0x105000]
+add r0, [0x106000]
+add r0, [0x107000]
+add r0, [0x108000]

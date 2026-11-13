@@ -1,22 +1,80 @@
 #include <iostream>
 #include "framework.h"
 #include "memory.h"
+#include <cstdio>
 
 
-int main()
+// this multiple arguments in main is like this becouse:
+// argumentCount     = 2            how many words were typed
+// argumentValues[0] = "Vm.exe"     the program's own name
+// argumentValues[1] = "hot.txt"    the first real argument : your input file
+// so basically to run it from console
+int main(int argumentCount, char** argumentValues)
 {
-	Memory memory;
-	memory.Write64(0x100, 0x0123456789ABCDEF); // this writes the 64-bit value to memory at address 0x100
-	memory.Write64(0x108, 0xACABACAB13121312); // this writes the 64 bit at 108
+    // Step 1 --- look for the input file
+    if (argumentCount < 2)
+    {
+        printf("Usage: Vm <input file>\n");
+        return 1;
+    }
+    // if it works, this is the input file path
+    const char* inputFilePath = argumentValues[1];
 
-	// the %llx prints a hex
-	printf("Read64 at 0x100: %llx\n", (unsigned long long)memory.Read64(0x100)); // 123456789abcdef
-	printf("Read8  at 0x100: %x\n", memory.Read8(0x100)); // ef
-	printf("Read8  at 0x107: %x\n", memory.Read8(0x107)); // 1
-	printf("Read64 at 0x108: %llx\n", (unsigned long long)memory.Read64(0x108)); // 1
 
-	memory.ShowCount();
+    // Step 2 --- Load the file with the framework
+    Framework::Program program; 
+    std::string errorMessage; // the program needs this
+    bool fileWasParsed = Framework::Load(inputFilePath, program, errorMessage);
+    // if loading fails becouse if the file print the error
+    if (!fileWasParsed)
+    {
+        printf("%s\n", errorMessage.c_str());
+        return 1;
+    }
 
+    printf("File:          %s\n", inputFilePath);
+    printf("Data entries:  %zu\n", program.data.size());
+    printf("Instructions:  %zu\n", program.code.size());
+
+    // Step 3 --- Copy it into RAM
+    const uint64_t bytesPerInstruction = 8;
+    const uint64_t programRegionSizeInBytes = 0x100000;   // first 1 MiB is reserved for the program
+    uint64_t programSizeInBytes = program.code.size() * bytesPerInstruction; // this reserves the size of the instruction with 8Bytes per instruction
+
+    // just in case the program instructions is too big
+    /*if (programSizeInBytes > programRegionSizeInBytes)
+    {
+        printf("The program is too big.\n");
+        return 1;
+    }*/
+
+    Memory memory;
+    for (const Framework::Program::DataEntry& dataEntry : program.data)   // data entry kind of object from farmework to iterate into the loaded data
+    {
+        memory.Load(dataEntry.address, dataEntry.value); // the address is in the input
+    }
+    for (size_t instructionIndex = 0; instructionIndex < program.code.size(); ++instructionIndex) // entry of the instructions in their reserved space
+    {
+        uint64_t instructionAddress = instructionIndex * bytesPerInstruction;   
+        uint64_t encodedInstruction = Framework::Encode(program.code[instructionIndex]);   // what?
+        memory.Load(instructionAddress, encodedInstruction);   // writes the instruction into ram
+    }
+
+    // step 4 --- check that the ram holds the data
+    size_t dataEntriesThatMatch = 0;
+    for (const Framework::Program::DataEntry& dataEntry : program.data)
+    {
+        uint64_t valueReadBack = memory.Peek64(dataEntry.address);
+        if (valueReadBack == dataEntry.value)
+        {
+            dataEntriesThatMatch++;
+        }
+    }
+    // (the same idea for the instructions: Peek64(instructionAddress) == Framework::Encode(...)) TODO LATER
+
+    printf("Data in RAM:          %zu of %zu entries match\n", dataEntriesThatMatch, program.data.size());
+
+   // Framework::Instruction decodedInstruction = Framework::Decode(memory.Peek64(instructionAddress));
 
     return 0;
 }
