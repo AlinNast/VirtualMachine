@@ -1,0 +1,4 @@
+vm
+tests
+*.o
+/VirtualMachine/.vs
