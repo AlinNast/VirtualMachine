@@ -38,8 +38,8 @@ namespace Framework
 {
 
     static const size_t LINE_SIZE = 64;           // cache line size, in bytes
-    static const uint64_t RAM_SIZE = 1u << 24;
-    static const uint64_t RAM_LATENCY = 250; // cycles for one main memory access
+	static const uint64_t RAM_SIZE = 1u << 24;   // 16 MiB of main memory // memory uses this when it starts
+    static const uint64_t RAM_LATENCY = 250;    // cycles for one main memory access /// = how many cycles it takes to access main memory? 250
 
     // ways = 1 is direct mapped, sets = 1 is fully associative.
     struct Config
