@@ -50,8 +50,9 @@ class Memory
             Check(addr, 8);     // do the check but with a larger size, since we are reading 8 bytes
 			uint64_t value = 0; // value to return
             for (int i = 0; i < 8; ++i)
-                value |= (uint64_t)bytes_[addr + i] << (8 * i);
-            return value;
+				value |= (uint64_t)bytes_[addr + i] << (8 * i);   // this << (8 * i) shifts the byte to the left by 8 bits for each iteration, so we get the next byte in the value
+            return value;                                        // this |= | (bitwise OR) combines two numbers bit by bit. A result bit is 1 if either input bit is 1. When one side has zeros where the other has data, it simply pastes them together: 0xCD00 | 0xEF = 0xCDEF.
+                                                                // |= is shorthand, like += .value |= x means value = value | x.
         }
 
 
@@ -64,14 +65,14 @@ class Memory
         {
             Check(addr, 8);   // do the check but with a larger size, since we are reading 8 bytes
             for (int i = 0; i < 8; ++i)
-                bytes_[addr + i] = (uint8_t)(value >> (8 * i));
+				bytes_[addr + i] = (uint8_t)(value >> (8 * i));   // this >> (8 * i) shifts the value to the right by 8 bits for each iteration, so we get the next byte in the value
         }
 
     private:
         /// <summary>
 		/// the actual bytes of the memory, initialized to zero
         /// </summary>
-        std::vector<uint8_t> bytes_;
+        std::vector<uint8_t> bytes_; // this is why ram knows only bytes
 
 
         /// <summary>
