@@ -1,4 +1,3 @@
-vm
-tests
-*.o
-/VirtualMachine/.vs
+
+/Vm/.vs
+/Vm/Vm/x64
