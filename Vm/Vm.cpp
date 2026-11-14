@@ -38,9 +38,9 @@ int main(int argumentCount, char** argumentValues)
     printf("Instructions:  %zu\n", program.code.size());
 
     // Step 3 --- Copy it into RAM
-    const uint64_t bytesPerInstruction = 8;
     const uint64_t programRegionSizeInBytes = 0x100000;   // first 1 MiB is reserved for the program
-    uint64_t programSizeInBytes = program.code.size() * bytesPerInstruction; // this reserves the size of the instruction with 8Bytes per instruction
+    uint64_t programSizeInBytes = program.code.size() * Cpu::bytesPerInstruction; // this reserves the size of the instruction with 8Bytes per instruction
+
 
     // just in case the program instructions is too big
     /*if (programSizeInBytes > programRegionSizeInBytes)
@@ -56,7 +56,7 @@ int main(int argumentCount, char** argumentValues)
     }
     for (size_t instructionIndex = 0; instructionIndex < program.code.size(); ++instructionIndex) // entry of the instructions in their reserved space
     {
-        uint64_t instructionAddress = instructionIndex * bytesPerInstruction;   
+        uint64_t instructionAddress = instructionIndex * Cpu::bytesPerInstruction;   
         uint64_t encodedInstruction = Framework::Encode(program.code[instructionIndex]);   // what?
         memory.Load(instructionAddress, encodedInstruction);   // writes the instruction into ram
     }
@@ -74,18 +74,21 @@ int main(int argumentCount, char** argumentValues)
 
     // step 5 --- initialize CPU
     Cpu cpu(memory);
-    // this should print 0s cause it resets after init
-    for (uint64_t registerIndex = 0; registerIndex < Cpu::numberOfGeneralRegisters; ++registerIndex)
-    {
-        printf("R%llu = %llu\n", (unsigned long long)registerIndex,(unsigned long long)cpu.GetGeneralRegister(registerIndex));
-    }
-    printf("IP = 0x%llx\n", (unsigned long long)cpu.GetInstructionPointer());
+
+    cpu.Run(programSizeInBytes);
+
 
 
     // (the same idea for the instructions: Peek64(instructionAddress) == Framework::Encode(...)) TODO LATER
 
+    /// all the debug prints
     printf("Data in RAM:          %zu of %zu entries match\n", dataEntriesThatMatch, program.data.size());
     printf("%s: accesses %llu, cycles %llu\n", memory.stats.name.c_str(),(unsigned long long)memory.stats.accesses,(unsigned long long)memory.stats.cycles);   /// so much logic for printing a string
+    printf("instructions in file:   %zu\n", program.code.size());
+    printf("instructions executed:  %llu\n", (unsigned long long)cpu.GetInstructionsExecuted());
+    printf("instruction pointer:    0x%llx\n", (unsigned long long)cpu.GetInstructionPointer());
+    printf("%s accesses: %llu, cycles: %llu\n", memory.stats.name.c_str(),
+        (unsigned long long)memory.stats.accesses, (unsigned long long)memory.stats.cycles);
 
    // Framework::Instruction decodedInstruction = Framework::Decode(memory.Peek64(instructionAddress));
 
