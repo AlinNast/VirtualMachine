@@ -82,13 +82,17 @@ int main(int argumentCount, char** argumentValues)
     // (the same idea for the instructions: Peek64(instructionAddress) == Framework::Encode(...)) TODO LATER
 
     /// all the debug prints
-    printf("Data in RAM:          %zu of %zu entries match\n", dataEntriesThatMatch, program.data.size());
-    printf("%s: accesses %llu, cycles %llu\n", memory.stats.name.c_str(),(unsigned long long)memory.stats.accesses,(unsigned long long)memory.stats.cycles);   /// so much logic for printing a string
-    printf("instructions in file:   %zu\n", program.code.size());
-    printf("instructions executed:  %llu\n", (unsigned long long)cpu.GetInstructionsExecuted());
-    printf("instruction pointer:    0x%llx\n", (unsigned long long)cpu.GetInstructionPointer());
-    printf("%s accesses: %llu, cycles: %llu\n", memory.stats.name.c_str(),
-        (unsigned long long)memory.stats.accesses, (unsigned long long)memory.stats.cycles);
+    
+
+    for (uint64_t registerIndex = 0; registerIndex < Cpu::numberOfGeneralRegisters; ++registerIndex)
+    {
+        printf("R%llu = %llu\n", (unsigned long long)registerIndex,
+            (unsigned long long)cpu.GetGeneralRegister(registerIndex));
+    }
+    printf("memory at 0x100000 = %llu\n", (unsigned long long)memory.Peek64(0x100000));
+
+    Framework::Report(inputFilePath, {}, memory.stats,
+        cpu.GetInstructionsExecuted(), cpu.GetExecutionCycles());
 
    // Framework::Instruction decodedInstruction = Framework::Decode(memory.Peek64(instructionAddress));
 
