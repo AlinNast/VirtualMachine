@@ -1,6 +1,7 @@
 #include <iostream>
 #include "framework.h"
 #include "memory.h"
+#include "cpu.h"
 #include <cstdio>
 
 
@@ -70,9 +71,21 @@ int main(int argumentCount, char** argumentValues)
             dataEntriesThatMatch++;
         }
     }
+
+    // step 5 --- initialize CPU
+    Cpu cpu(memory);
+    // this should print 0s cause it resets after init
+    for (uint64_t registerIndex = 0; registerIndex < Cpu::numberOfGeneralRegisters; ++registerIndex)
+    {
+        printf("R%llu = %llu\n", (unsigned long long)registerIndex,(unsigned long long)cpu.GetGeneralRegister(registerIndex));
+    }
+    printf("IP = 0x%llx\n", (unsigned long long)cpu.GetInstructionPointer());
+
+
     // (the same idea for the instructions: Peek64(instructionAddress) == Framework::Encode(...)) TODO LATER
 
     printf("Data in RAM:          %zu of %zu entries match\n", dataEntriesThatMatch, program.data.size());
+    printf("%s: accesses %llu, cycles %llu\n", memory.stats.name.c_str(),(unsigned long long)memory.stats.accesses,(unsigned long long)memory.stats.cycles);   /// so much logic for printing a string
 
    // Framework::Instruction decodedInstruction = Framework::Decode(memory.Peek64(instructionAddress));
 

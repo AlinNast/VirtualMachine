@@ -11,7 +11,15 @@ class Memory
 
     public:
         
-        Memory(uint64_t size = Framework::RAM_SIZE) : bytes_(size, 0) {}  // the “volatile, starts empty” RAM
+        Memory(uint64_t size = Framework::RAM_SIZE) : bytes_(size, 0) 
+        {
+            stats.name = "RAM";
+        }  // the “volatile, starts empty” RAM
+
+        /// <summary>
+        /// Frameworks build in counting struct
+        /// </summary>
+        Framework::Stats stats;
 
 
 		uint64_t Size() const { return bytes_.size(); }  // returns the size of the memory in bytes
@@ -94,10 +102,6 @@ class Memory
         }
 
 
-        void ShowCount() {
-            printf("Accesses: %llu \n",accesses);
-            printf("Cycles: %llu \n", cycles);
-        }
 
 
 
@@ -106,8 +110,6 @@ class Memory
 		/// the actual bytes of the memory, initialized to zero
         /// </summary>
         std::vector<uint8_t> bytes_; // this is why ram knows only bytes
-        int accesses = 0;
-        int cycles = 0;
 
 
         /// <summary>
@@ -115,8 +117,8 @@ class Memory
         /// </summary>
         void Count() 
         { 
-            accesses++;
-            cycles += Framework::RAM_LATENCY; 
+            stats.accesses++;
+            stats.cycles += Framework::RAM_LATENCY; 
         }
 
 
