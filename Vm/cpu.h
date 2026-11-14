@@ -161,13 +161,13 @@ class Cpu
         {
             switch (operand.kind)
             {
-            case Framework::REG:                    // Reg means in register 2
+            case Framework::REG:                    // Reg means in general register 
                 return generalRegisters_[operand.reg];
             case Framework::IMM:                    // imm means in imidiate, basically in the instruction itself
                 return operand.imm;
             case Framework::MEM:                    // in memory at the address in the instruction
                 return memory_.Read64(operand.imm);
-            case Framework::IND:                    // in memory at the address in register 1
+            case Framework::IND:                    // in memory at the address in register 
                 return memory_.Read64(generalRegisters_[operand.reg]);
             }
             throw std::runtime_error("unknown operand kind");
