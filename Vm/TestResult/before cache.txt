@@ -1,0 +1,137 @@
+File:          hot.txt
+Data entries:  64
+Instructions:  129
+R0 = 4160
+R1 = 0
+R2 = 0
+R3 = 0
+memory at 0x100000 = 1
+hot.txt
+
+instructions       129
+execution cycles   129
+memory cycles      64250
+total cycles       64379
+ipc                0.00
+waiting for memory 99.8%
+
+level  accesses  hits  misses  evictions  cycles
+RAM         257     -       0         -   64250
+
+
+
+
+File:          chase.txt
+Data entries:  128
+Instructions:  258
+R0 = 2080
+R1 = 1048576
+R2 = 1982472
+R3 = 0
+memory at 0x100000 = 1
+chase.txt
+
+instructions       258
+execution cycles   258
+memory cycles      96500
+total cycles       96758
+ipc                0.00
+waiting for memory 99.7%
+
+level  accesses  hits  misses  evictions  cycles
+RAM         386     -       0         -   96500
+
+
+
+
+
+File:          conflict.txt
+Data entries:  9
+Instructions:  19
+R0 = 90
+R1 = 0
+R2 = 0
+R3 = 0
+memory at 0x100000 = 1
+conflict.txt
+
+instructions       19
+execution cycles   19
+memory cycles      9250
+total cycles       9269
+ipc                0.00
+waiting for memory 99.8%
+
+level  accesses  hits  misses  evictions  cycles
+RAM          37     -       0         -    9250
+
+
+
+
+
+File:          scattered.txt
+Data entries:  128
+Instructions:  257
+R0 = 1040640
+R1 = 0
+R2 = 0
+R3 = 0
+memory at 0x100000 = 1
+scattered.txt
+
+instructions       257
+execution cycles   257
+memory cycles      128250
+total cycles       128507
+ipc                0.00
+waiting for memory 99.8%
+
+level  accesses  hits  misses  evictions  cycles
+RAM         513     -       0         -  128250
+
+
+
+
+
+File:          sequential.txt
+Data entries:  8192
+Instructions:  16385
+R0 = 67117056
+R1 = 0
+R2 = 0
+R3 = 0
+memory at 0x100000 = 1
+sequential.txt
+
+instructions       16385
+execution cycles   16385
+memory cycles      8192250
+total cycles       8208635
+ipc                0.00
+waiting for memory 99.8%
+
+level  accesses  hits  misses  evictions  cycles
+RAM       32769     -       0         - 8192250
+
+
+
+
+File:          write-heavy.txt
+Data entries:  0
+Instructions:  1797
+R0 = 32896
+R1 = 1050624
+R2 = 257
+R3 = 0
+memory at 0x100000 = 1
+write-heavy.txt
+
+instructions       1797
+execution cycles   1797
+memory cycles      641250
+total cycles       643047
+ipc                0.00
+waiting for memory 99.7%
+
+level  accesses  hits  misses  evictions  cycles
+RAM        2565     -       0         -  641250
