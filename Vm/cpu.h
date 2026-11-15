@@ -1,7 +1,7 @@
 #pragma once
 
 #include "framework.h"
-#include "memory.h"
+#include "memorySystem.h"
 #include <cstdio>
 #include <cstdint>
 #include <stdexcept>
@@ -17,7 +17,7 @@ class Cpu
         static constexpr uint64_t cyclesForMultiply = 3;
 
 
-        Cpu(Memory& memory) : memory_(memory)   /// constructor
+        Cpu(MemorySystem& memory) : memory_(memory)   /// constructor
         {
             Reset();
         }
@@ -99,7 +99,7 @@ class Cpu
 
 	private:
 
-		Memory& memory_;  // needs to be reference to not copy the whole mem into the cpu
+        MemorySystem& memory_;  // needs to be reference to not copy the whole mem into the cpu
 
 		uint64_t generalRegisters_[numberOfGeneralRegisters]; // should be 4
 

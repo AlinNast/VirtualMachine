@@ -29,5 +29,8 @@
     <ClInclude Include="cpu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="memorySystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

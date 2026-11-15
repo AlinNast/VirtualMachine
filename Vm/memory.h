@@ -1,4 +1,5 @@
 #pragma once
+#include "memorySystem.h"
 #include "framework.h"
 #include <cstdint>
 #include <stdexcept>
@@ -6,7 +7,7 @@
 
 // Volatile = Memory is empty at startup and forgotten at exit. Each run starts from zeros and is filled from the input file.
 
-class Memory
+class Memory : public MemorySystem
 {
 
     public:
@@ -56,7 +57,7 @@ class Memory
         /// </summary>
         /// <param name="addr"></param>
         /// <returns></returns>
-        uint64_t Read64(uint64_t address)
+        uint64_t Read64(uint64_t address) override
         {
 			
             Check(address, 8);     // do the check but with a larger size, since we are reading 8 bytes
@@ -70,7 +71,7 @@ class Memory
         /// </summary>
         /// <param name="addr"></param>
         /// <param name="value"></param>
-        void Write64(uint64_t address, uint64_t value)
+        void Write64(uint64_t address, uint64_t value) override
         {
             Check(address, 8);   // do the check but with a larger size, since we are reading 8 bytes
             Count();
