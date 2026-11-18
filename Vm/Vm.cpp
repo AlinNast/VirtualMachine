@@ -3,6 +3,9 @@
 #include "memory.h"
 #include "cpu.h"
 #include <cstdio>
+#include "tests.h"
+#include <cstring>
+#include "cacheLevel.h"
 
 
 // this multiple arguments in main is like this becouse:
@@ -26,7 +29,7 @@ int main(int argumentCount, char** argumentValues)
     Framework::Program program; 
     std::string errorMessage; // the program needs this
     bool fileWasParsed = Framework::Load(inputFilePath, program, errorMessage);
-    // if loading fails becouse if the file print the error
+    // if loading fails becouse of the file print the error
     if (!fileWasParsed)
     {
         printf("%s\n", errorMessage.c_str());
@@ -38,31 +41,33 @@ int main(int argumentCount, char** argumentValues)
     printf("Instructions:  %zu\n", program.code.size());
 
     // Step 3 --- Copy it into RAM
+    // make sizes
     const uint64_t programRegionSizeInBytes = 0x100000;   // first 1 MiB is reserved for the program
     uint64_t programSizeInBytes = program.code.size() * Cpu::bytesPerInstruction; // this reserves the size of the instruction with 8Bytes per instruction
-
-
     // just in case the program instructions is too big
-    /*if (programSizeInBytes > programRegionSizeInBytes)
+    if (programSizeInBytes > programRegionSizeInBytes)
     {
         printf("The program is too big.\n");
         return 1;
-    }*/
+    }
 
     Memory memory;
+
+    // load data
     for (const Framework::Program::DataEntry& dataEntry : program.data)   // data entry kind of object from farmework to iterate into the loaded data
     {
         memory.Load(dataEntry.address, dataEntry.value); // the address is in the input
     }
+    // load instructions
     for (size_t instructionIndex = 0; instructionIndex < program.code.size(); ++instructionIndex) // entry of the instructions in their reserved space
     {
-        uint64_t instructionAddress = instructionIndex * Cpu::bytesPerInstruction;   
+        uint64_t instructionAddress = instructionIndex * Cpu::bytesPerInstruction;   // 64
         uint64_t encodedInstruction = Framework::Encode(program.code[instructionIndex]);   // what?
         memory.Load(instructionAddress, encodedInstruction);   // writes the instruction into ram
     }
 
     // step 4 --- check that the ram holds the data
-    size_t dataEntriesThatMatch = 0;
+    /*size_t dataEntriesThatMatch = 0;
     for (const Framework::Program::DataEntry& dataEntry : program.data)
     {
         uint64_t valueReadBack = memory.Peek64(dataEntry.address);
@@ -70,10 +75,14 @@ int main(int argumentCount, char** argumentValues)
         {
             dataEntriesThatMatch++;
         }
-    }
+    }*/
 
     // step 5 --- initialize CPU
-    Cpu cpu(memory);
+    CacheLevel level3("L3", Framework::CACHE_CONFIGS[2], memory);
+    CacheLevel level2("L2", Framework::CACHE_CONFIGS[1], level3);
+    CacheLevel level1("L1", Framework::CACHE_CONFIGS[0], level2);
+
+    Cpu cpu(level1);
 
     cpu.Run(programSizeInBytes);
 
@@ -89,10 +98,21 @@ int main(int argumentCount, char** argumentValues)
         printf("R%llu = %llu\n", (unsigned long long)registerIndex,
             (unsigned long long)cpu.GetGeneralRegister(registerIndex));
     }
-    printf("memory at 0x100000 = %llu\n", (unsigned long long)memory.Peek64(0x100000));
 
-    Framework::Report(inputFilePath, {}, memory.stats,
+    // A fingerprint of the whole RAM, to compare runs: same program, same fingerprint.
+    uint64_t memoryChecksum = 0;
+    for (uint64_t address = 0; address < Framework::RAM_SIZE; address += 8)
+        memoryChecksum = memoryChecksum * 1099511628211ull + memory.Peek64(address);
+    printf("memory checksum = %016llx\n", (unsigned long long)memoryChecksum);
+
+    Framework::Report(inputFilePath, { level1.stats, level2.stats, level3.stats }, memory.stats,
         cpu.GetInstructionsExecuted(), cpu.GetExecutionCycles());
+
+    if (strcmp(argumentValues[2], "--test") == 0)
+    {
+        return Tests::RunAll();
+    }
+
 
    // Framework::Instruction decodedInstruction = Framework::Decode(memory.Peek64(instructionAddress));
 

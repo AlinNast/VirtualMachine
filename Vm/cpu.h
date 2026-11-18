@@ -220,7 +220,7 @@ class Cpu
 
             // setup
             uint64_t sourceValue = ReadOperandValue(instruction.src);  
-            uint64_t destinationValue = generalRegisters_[instruction.dst.reg];  // dest reg is not the same as dest kind
+            uint64_t destinationValue = generalRegisters_[instruction.dst.reg];  // it means which register specifically 
             uint64_t result = 0;
 
             // actual calculation
@@ -232,7 +232,7 @@ class Cpu
             }
 
             // write the result in the dest reg
-            generalRegisters_[instruction.dst.reg] = result;
+            generalRegisters_[instruction.dst.reg] = result;  // it writes only in registers, it does the operation on the value already existing in the register
         }
 
 

@@ -1,13 +1,15 @@
 #pragma once
 #include "memorySystem.h"
 #include "framework.h"
+#include "lineBytes.h"
 #include <cstdint>
 #include <stdexcept>
 #include <vector>
+#include "lineMemory.h"
 
 // Volatile = Memory is empty at startup and forgotten at exit. Each run starts from zeros and is filled from the input file.
 
-class Memory : public MemorySystem
+class Memory : public MemorySystem, public LineMemory
 {
 
     public:
@@ -103,6 +105,27 @@ class Memory : public MemorySystem
         }
 
 
+        // Reads a whole line (64 bytes) starting at lineStartAddress. ONE RAM access, whatever the line size.
+        LineBytes ReadLine(uint64_t lineStartAddress) override
+        {
+            CheckLineStart(lineStartAddress);
+            Count();
+            LineBytes line;
+            for (uint64_t byteInLine = 0; byteInLine < Framework::LINE_SIZE; ++byteInLine)
+                line[byteInLine] = bytes_[lineStartAddress + byteInLine];
+            return line;
+        }
+
+        // Writes a whole line (64 bytes) starting at lineStartAddress. ONE RAM access.
+        void WriteLine(uint64_t lineStartAddress, const LineBytes& line) override
+        {
+            CheckLineStart(lineStartAddress);
+            Count();
+            for (uint64_t byteInLine = 0; byteInLine < Framework::LINE_SIZE; ++byteInLine)
+                bytes_[lineStartAddress + byteInLine] = line[byteInLine];
+        }
+
+
 
 
 
@@ -135,6 +158,16 @@ class Memory : public MemorySystem
         }
 
 
+        /// <summary>
+        /// Check if the line start is a multiple of 64 and then uses the above check for range, size and bounds 
+        /// </summary>
+        /// <param name="lineStartAddress"></param>
+        void CheckLineStart(uint64_t lineStartAddress) const
+        {
+            if (lineStartAddress % Framework::LINE_SIZE != 0)
+                throw std::invalid_argument("a line must start at a multiple of the line size");
+            Check(lineStartAddress, Framework::LINE_SIZE);
+        }
 
         /// <summary>
         /// what actually gets the data but its private

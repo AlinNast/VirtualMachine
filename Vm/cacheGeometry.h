@@ -17,9 +17,12 @@ struct SplitAddress
     uint64_t lineNumber;   // address divided by the line size: identifies the line in the whole memory
 };
 
+
+
 class CacheGeometry
 {
     public:
+        // dont change config from framework - line size is 64 by default
         CacheGeometry(const Framework::Config& config, uint64_t lineSizeInBytes = Framework::LINE_SIZE) : lineSizeInBytes_(lineSizeInBytes), numberOfWays_(config.ways)
         {
             // broken geometry test
@@ -30,8 +33,9 @@ class CacheGeometry
             if (config.size % (lineSizeInBytes_ * numberOfWays_) != 0)
                 throw std::invalid_argument("cache size must be a whole number of sets");
 
-            numberOfSets_ = config.size / (lineSizeInBytes_ * numberOfWays_);
+            numberOfSets_ = config.size / (lineSizeInBytes_ * numberOfWays_);  // for L1 32768 / (64x8)
 
+            // everything needs a power of two
             if (!IsPowerOfTwo(lineSizeInBytes_) || !IsPowerOfTwo(numberOfSets_))
                 throw std::invalid_argument("line size and number of sets must be powers of two");
 
@@ -43,14 +47,31 @@ class CacheGeometry
             tagBitCount_ = (bitsUsedByOffsetAndIndex < addressBitCount) ? addressBitCount - bitsUsedByOffsetAndIndex : 0;
         }
 
+        /// <summary>
+        ///  One string of 24 bits (for this memory size) 
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
         SplitAddress Split(uint64_t address) const
         {
             SplitAddress parts;
-            parts.offset = address & (lineSizeInBytes_ - 1);          // keep the lowest offsetBitCount bits
-            parts.lineNumber = address >> offsetBitCount_;            // throw the offset away
-            parts.index = parts.lineNumber & (numberOfSets_ - 1);     // keep the lowest indexBitCount bits of the line number
-            parts.tag = parts.lineNumber >> indexBitCount_;           // throw the index away: what's left is the tag
+            parts.offset = address & (lineSizeInBytes_ - 1);          // Offset is always the last 6 bits
+            parts.lineNumber = address >> offsetBitCount_;            // throw the offset away to get the "starting address"
+            parts.index = parts.lineNumber & (numberOfSets_ - 1);     // index is different based on the cache size
+            parts.tag = parts.lineNumber >> indexBitCount_;           // throw the index away: what's left is the tag (leftmost part of the address)
             return parts;
+        }
+        /// offset = address mod 64
+        /// index = (address / 64) mod(number of sets of that level)
+        /// tag = (address / 64) / (number of sets of that level)
+        /// x & (N - 1)   ==   x % N  / & compares two numbers bit by bit: a result bit is 1 only where both numbers have a 1. / this works becouse addresses make sense as bits
+
+
+        // The reverse: the address of the FIRST byte of the line with this tag and index.
+        uint64_t AddressOfLine(uint64_t tag, uint64_t index) const
+        {
+            uint64_t lineNumber = (tag << indexBitCount_) | index;
+            return lineNumber << offsetBitCount_;
         }
 
 
@@ -66,10 +87,11 @@ class CacheGeometry
         static uint64_t BitsNeededToCount(uint64_t numberOfValues)
         {
             uint64_t bitCount = 0;
-            while ((1ull << bitCount) < numberOfValues)
+            while ((1ull << bitCount) < numberOfValues) // 2^bitCount , ull suffix makes the 1 a 64-bit number
                 ++bitCount;
             return bitCount;
         }
+        //With 6 bits you can write 000000 to 111111, which is the numbers 0 to 63, so 64 values. 2? = 64.
 
         static bool IsPowerOfTwo(uint64_t value)
         {

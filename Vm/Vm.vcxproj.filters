@@ -35,5 +35,17 @@
     <ClInclude Include="cacheGeometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lineBytes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tests.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cacheLevel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lineMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

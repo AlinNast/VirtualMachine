@@ -2,6 +2,9 @@
 
 #include <cstdint>
 
+/// <summary>
+/// Interface for memory to read and write
+/// </summary>
 class MemorySystem
 {
 
